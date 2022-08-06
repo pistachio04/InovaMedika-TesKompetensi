@@ -1,10 +1,11 @@
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {colors} from '../../utils/colors';
 import {fonts} from '../../utils/fonts';
-import {Button, Gap, Input} from '../../components';
+import {Button, Gap, Input, Loading} from '../../components';
 import {ILLogo} from '../../assets';
 import {useForm} from '../../utils';
+import {Fire} from '../../config';
 
 const Register = ({navigation}) => {
   const [form, setForm] = useForm({
@@ -13,40 +14,57 @@ const Register = ({navigation}) => {
     password: '',
   });
 
+  const [loading, setLoading] = useState(false);
+
   const onSignUp = () => {
     console.log(form);
+    setLoading(true);
+    Fire.auth()
+      .createUserWithEmailAndPassword(form.email, form.password)
+      .then(success => {
+        setLoading(false);
+        console.log('register success: ', success);
+      })
+      .catch(error => {
+        setLoading(false);
+        const errorMessage = error.message;
+        console.log('error register: ', errorMessage);
+      });
   };
   return (
-    <View style={styles.page}>
-      <View style={styles.container}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <ILLogo style={styles.logo} />
-          <Text style={styles.title}>Register</Text>
-          <View>
-            <Input
-              label="Full Name"
-              value={form.fullName}
-              onChangeText={value => setForm('fullName', value)}
-            />
-            <Gap height={12} />
-            <Input
-              label="Email Address"
-              value={form.email}
-              onChangeText={value => setForm('email', value)}
-            />
-            <Gap height={12} />
-            <Input
-              label="Password"
-              value={form.password}
-              onChangeText={value => setForm('password', value)}
-              secureTextEntry
-            />
-            <Gap height={32} />
-            <Button label="Sign Up" onPress={onSignUp} />
-          </View>
-        </ScrollView>
+    <>
+      <View style={styles.page}>
+        <View style={styles.container}>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <ILLogo style={styles.logo} />
+            <Text style={styles.title}>Register</Text>
+            <View>
+              <Input
+                label="Full Name"
+                value={form.fullName}
+                onChangeText={value => setForm('fullName', value)}
+              />
+              <Gap height={12} />
+              <Input
+                label="Email Address"
+                value={form.email}
+                onChangeText={value => setForm('email', value)}
+              />
+              <Gap height={12} />
+              <Input
+                label="Password"
+                value={form.password}
+                onChangeText={value => setForm('password', value)}
+                secureTextEntry
+              />
+              <Gap height={32} />
+              <Button label="Sign Up" onPress={onSignUp} />
+            </View>
+          </ScrollView>
+        </View>
       </View>
-    </View>
+      {loading && <Loading />}
+    </>
   );
 };
 
