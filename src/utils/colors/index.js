@@ -10,7 +10,7 @@ const mainColors = {
   blue1: '#65AFCD',
   black1: '#000000',
   black2: 'rgba(0,0,0,0.5)',
-  red1: '#E06379',
+  red1: '#FF0000',
 };
 export const colors = {
   primary: mainColors.blue1,

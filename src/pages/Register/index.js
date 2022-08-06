@@ -4,8 +4,9 @@ import {colors} from '../../utils/colors';
 import {fonts} from '../../utils/fonts';
 import {Button, Gap, Input, Loading} from '../../components';
 import {ILLogo} from '../../assets';
-import {useForm} from '../../utils';
+import {storeData, useForm} from '../../utils';
 import {Fire} from '../../config';
+import {showMessage, hideMessage} from 'react-native-flash-message';
 
 const Register = ({navigation}) => {
   const [form, setForm] = useForm({
@@ -23,12 +24,28 @@ const Register = ({navigation}) => {
       .createUserWithEmailAndPassword(form.email, form.password)
       .then(success => {
         setLoading(false);
+        setForm('reset');
+        //menyimpan data ke db
+        const data = {
+          fullName: form.fullName,
+          email: form.email,
+        };
+        Fire.database()
+          .ref('users/' + success.user.uid + '/')
+          .set(data);
+        // simpan ke localstorage
+        storeData('user', data);
+        navigation.navigate('Login');
         console.log('register success: ', success);
       })
       .catch(error => {
         setLoading(false);
-        const errorMessage = error.message;
-        console.log('error register: ', errorMessage);
+        showMessage({
+          message: error.message,
+          type: 'default',
+          backgroundColor: colors.error,
+          color: colors.white,
+        });
       });
   };
   return (

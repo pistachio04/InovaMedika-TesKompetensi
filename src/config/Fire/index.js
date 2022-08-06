@@ -10,6 +10,7 @@ import firebase from 'firebase';
 firebase.initializeApp({
   apiKey: 'AIzaSyDe18vruGb-uxHdEXpZ4oC3vzq2k16lhBY',
   authDomain: 'inovamedika-e490c.firebaseapp.com',
+  databaseURL: 'https://inovamedika-e490c-default-rtdb.firebaseio.com',
   projectId: 'inovamedika-e490c',
   storageBucket: 'inovamedika-e490c.appspot.com',
   messagingSenderId: '629429046463',
